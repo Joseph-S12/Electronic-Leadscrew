@@ -46,11 +46,21 @@ void initGPIO(){
 void gpioCallback(uint gpio, uint32_t events) {
   switch (gpio) {
     case 0:
-    break;
+      if (events == 0b1000){
+        void pulse0irqRise();
+      } else if (events == 0b0100){
+        extern void pulse0irqFall();
+      }//Else do nothing
+      break;
     case 1:
-    break;
+      if (events == 0b1000){
+        void pulse01rqRise();
+      } else if (events == 0b0100){
+        extern void pulse1irqFall();
+      }//Else do nothing
+      break;
     default:
-    break;
+      break;
   }
 }
 
