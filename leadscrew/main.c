@@ -4,15 +4,33 @@
 #include "quadrature.c"
 #include "stepper.h"
 #include "stepper.c"
+#include "display.h"
+#include "display.c"
 
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/multicore.h"
 #include "pico/time.h"
 
+//This is the initialisation code for core 0. Everything on this core after initialisation is interrupt driven and deals with the quadrature encoder and driving the stepper.
+//It is interrupted by the quadrature encoder pulses.
 void main() {
-  initGPIO();
+  initGPIO0();
   stdio_init_all();
   initialiseQuadrature();
 
+  multicore_launch_core1(main_core1());
+
+
   while (true);
+}
+
+//This is the initialisation and run-time code of core 1. It deals with the 'user interface' (7 segment display and buttons).
+//It is not interrupt driven, with the exception of the forwards/reverse switch
+void main_core1() {
+  initGPIO1();
+
+  while (true){
+    printRPM(1000);
+  }
 }

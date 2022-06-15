@@ -67,7 +67,7 @@ void pulse1irqFall() {
 }
 
 void doPulse(int8_t count){
-  double step;
+  float step;
   divisionCounter+=count;
   //Do calculations for the current desired step
   step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH * divisionCounter) / (NUM_DIVISIONS * pitch));
