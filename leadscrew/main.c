@@ -1,3 +1,4 @@
+#include "main.h"
 #include "gpio.h"
 #include "gpio.c"
 #include "quadrature.h"
@@ -15,11 +16,11 @@
 //This is the initialisation code for core 0. Everything on this core after initialisation is interrupt driven and deals with the quadrature encoder and driving the stepper.
 //It is interrupted by the quadrature encoder pulses.
 void main() {
+  multicore_launch_core1(&main_core1);
+
   initGPIO0();
   stdio_init_all();
   initialiseQuadrature();
-
-  multicore_launch_core1(main_core1());
 
 
   while (true);
@@ -29,6 +30,7 @@ void main() {
 //It is not interrupt driven, with the exception of the forwards/reverse switch
 void main_core1() {
   initGPIO1();
+  initialiseDisplay();
 
   while (true){
     printRPM(1000);

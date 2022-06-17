@@ -63,11 +63,12 @@ void initGPIO1(){
 
   gpio_init(DISPLAY_CLK_PIN);
   gpio_set_dir(DISPLAY_CLK_PIN, GPIO_OUT);
-  gpio_pull_up(DISPLAY_CLK_PIN);
 
   gpio_init(DISPLAY_SIO_PIN);
   gpio_set_dir(DISPLAY_SIO_PIN, GPIO_OUT);
-  gpio_pull_up(DISPLAY_SIO_PIN);
+
+  gpio_init(DISPLAY_STB_PIN);
+  gpio_set_dir(DISPLAY_STB_PIN, GPIO_OUT);
 
 }
 
