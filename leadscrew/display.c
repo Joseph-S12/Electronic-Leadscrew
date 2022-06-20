@@ -1,16 +1,42 @@
 #include "display.h"
 #include "gpio.h"
+#include <math.h>
+
+bool indicatorLEDs[8];
+uint8_t rpm_display[4];
+uint8_t pitch_display[4];
+
+const bool number[10][8] = {{0,0,1,1,1,1,1,1},
+                            {0,0,0,0,0,1,1,0},
+                            {0,1,0,1,1,0,1,1},
+                            {0,1,0,0,1,1,1,1},
+                            {0,1,1,0,0,1,1,0},
+                            {0,1,1,0,1,1,0,1},
+                            {0,1,1,1,1,1,0,1},
+                            {0,0,0,0,0,1,1,1},
+                            {0,1,1,1,1,1,1,1},
+                            {0,1,1,0,1,1,1,1}};
 
 void initialiseDisplay() {
   bool command0[8] = {1,0,0,0,1,1,1,1};
   bool command1[8] = {0,1,0,0,0,0,0,0};
   bool command2[8] = {1,1,0,0,0,0,0,0};
-  bool data[8] = {0,0,1,1,1,1,1,1};
 
   //initialise outputs
   displaySTBWrite(1);
   sleep_us(100);
   displayCLKWrite(1);
+
+  //Init indicatorLEDs
+  for (size_t i = 0; i < 8; i++) {
+    indicatorLEDs[i]=0;
+  }
+
+  //Init display digits
+  for (size_t i = 0; i < 4; i++) {
+    rpm_display[i]=0;
+    pitch_display[i]=0;
+  }
 
   //Start the board
   displaySTBWrite(0);
@@ -46,7 +72,6 @@ void initialiseDisplay() {
     displayCLKWrite(1);
   }
 
-
   //Wipe all display digits
   for (size_t x = 0; x < 16; x++) {
     for (int8_t i = 7; i >= 0; i--) {
@@ -67,18 +92,22 @@ void initialiseDisplay() {
   gpio25Write(false);
 }
 
-void printRPM(uint32_t rpm_int) {
+void updateRPM(uint16_t rpm_int) {
+  rpm_display[0]=rpm_int/1000;
+  rpm_display[1]=(rpm_int/100)-(rpm_display[0]*10);
+  rpm_display[2]=(rpm_int/10)-(rpm_display[0]*100)-(rpm_display[1]*10);
+  rpm_display[3]=rpm_int-(rpm_display[0]*1000)-(rpm_display[1]*100)-(rpm_display[2]*10);
+}
+
+void updatePitch(uint16_t pitch_int) {
+  pitch_display[0]=pitch_int/1000;
+  pitch_display[1]=(pitch_int/100)-(pitch_display[0]*10);
+  pitch_display[2]=(pitch_int/10)-(pitch_display[0]*100)-(pitch_display[1]*10);
+  pitch_display[3]=pitch_int-(pitch_display[0]*1000)-(pitch_display[1]*100)-(pitch_display[2]*10);
+}
+
+void printDisplay(){
   bool command[8] = {1,1,0,0,0,0,0,0};
-  bool number[10][8] = {{0,0,1,1,1,1,1,1},
-                      {0,0,0,0,0,1,1,0},
-                      {0,1,0,1,1,0,1,1},
-                      {0,1,0,0,1,1,1,1},
-                      {0,1,1,0,0,1,1,0},
-                      {0,1,1,0,1,1,0,1},
-                      {0,1,1,1,1,1,0,1},
-                      {0,0,0,0,0,1,1,1},
-                      {0,1,1,1,1,1,1,1},
-                      {0,1,1,0,1,1,1,1}};
 
   //Set start address
   displaySTBWrite(0);
@@ -91,18 +120,40 @@ void printRPM(uint32_t rpm_int) {
   }
 
 
-  //Wipe all display digits
-  for (size_t x = 0; x < 8; x++) {
+  //Set rpm digits
+  for (size_t x = 0; x < 4; x++) {
     for (int8_t i = 7; i >= 0; i--) {
       sleep_us(100);
-      displaySIOWrite(number[x][i]);
+      displaySIOWrite(number[rpm_display[x]][i]);
       displayCLKWrite(0);
       sleep_us(100);
       displayCLKWrite(1);
     }
     for (int8_t i = 7; i >= 0; i--) {
       sleep_us(100);
-      displaySIOWrite(0);
+      displaySIOWrite(indicatorLEDs[x]);
+      displayCLKWrite(0);
+      sleep_us(100);
+      displayCLKWrite(1);
+    }
+  }
+  //Set pitch digits
+  for (size_t x = 0; x < 4; x++) {
+    for (int8_t i = 7; i >= 0; i--) {
+      sleep_us(100);
+      if (x == 0 && i == 0){
+        displaySIOWrite(1);
+      }
+      else {
+        displaySIOWrite(number[pitch_display[x]][i]);
+      }
+      displayCLKWrite(0);
+      sleep_us(100);
+      displayCLKWrite(1);
+    }
+    for (int8_t i = 7; i >= 0; i--) {
+      sleep_us(100);
+      displaySIOWrite(indicatorLEDs[x+4]);
       displayCLKWrite(0);
       sleep_us(100);
       displayCLKWrite(1);
@@ -110,8 +161,10 @@ void printRPM(uint32_t rpm_int) {
   }
   displaySTBWrite(1);
   sleep_us(100);
-}
 
-void printPitch(uint32_t pitch_int) {
-
+  //Flashes the LED`
+  sleep_ms(500);
+  gpio25Write(true);
+  sleep_ms(500);
+  gpio25Write(false);
 }

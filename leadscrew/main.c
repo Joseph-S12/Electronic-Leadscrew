@@ -33,6 +33,8 @@ void main_core1() {
   initialiseDisplay();
 
   while (true){
-    printRPM(1000);
+    updateRPM(1234);
+    updatePitch(700);
+    printDisplay();
   }
 }

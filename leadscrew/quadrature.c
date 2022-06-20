@@ -13,13 +13,13 @@ volatile uint8_t direction;
 //  1 = forwards
 //  2 = backwards
 
-volatile double pitch;
+volatile uint16_t pitch_1000; //pitch multiplied by 1000
 
 void initialiseQuadrature(){
   direction=0;
   divisionCounter=0;
   stepCounter=0;
-  pitch=1;
+  pitch_1000=1;
 }
 
 volatile uint8_t checkDir() {
@@ -70,7 +70,7 @@ void doPulse(int8_t count){
   float step;
   divisionCounter+=count;
   //Do calculations for the current desired step
-  step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH * divisionCounter) / (NUM_DIVISIONS * pitch));
+  step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * divisionCounter) / (NUM_DIVISIONS * pitch_1000));
   //Calculates how many steps need to be performed
   if (stepCounter < 0) {
     step = step - stepCounter;
