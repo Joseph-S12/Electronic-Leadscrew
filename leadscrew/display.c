@@ -6,7 +6,8 @@ bool indicatorLEDs[8];
 uint8_t rpm_display[4];
 uint8_t pitch_display[4];
 
-const bool number[10][8] = {{0,0,1,1,1,1,1,1},
+//This is a table of which LEDs to activate, depending upon the digit that needs displaying
+const bool number[11][8] = {{0,0,1,1,1,1,1,1},
                             {0,0,0,0,0,1,1,0},
                             {0,1,0,1,1,0,1,1},
                             {0,1,0,0,1,1,1,1},
@@ -15,7 +16,8 @@ const bool number[10][8] = {{0,0,1,1,1,1,1,1},
                             {0,1,1,1,1,1,0,1},
                             {0,0,0,0,0,1,1,1},
                             {0,1,1,1,1,1,1,1},
-                            {0,1,1,0,1,1,1,1}};
+                            {0,1,1,0,1,1,1,1},
+                            {0,0,0,0,0,0,0,0}};
 
 void initialiseDisplay() {
   bool command0[8] = {1,0,0,0,1,1,1,1};
@@ -97,6 +99,19 @@ void updateRPM(uint16_t rpm_int) {
   rpm_display[1]=(rpm_int/100)-(rpm_display[0]*10);
   rpm_display[2]=(rpm_int/10)-(rpm_display[0]*100)-(rpm_display[1]*10);
   rpm_display[3]=rpm_int-(rpm_display[0]*1000)-(rpm_display[1]*100)-(rpm_display[2]*10);
+  //Remove header 0s
+  if (rpm_display[0]==0 && rpm_display[1]==0 && rpm_display[2]==0){
+    rpm_display[0]=10;
+    rpm_display[1]=10;
+    rpm_display[2]=10;
+  }
+  else if (rpm_display[0]==0 && rpm_display[1]==0){
+    rpm_display[0]=10;
+    rpm_display[1]=10;
+  }
+  if (rpm_display[0]==0){
+    rpm_display[0]=10;
+  }
 }
 
 void updatePitch(uint16_t pitch_int) {

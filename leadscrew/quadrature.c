@@ -2,8 +2,9 @@
 #include "gpio.h"
 #include "stepper.h"
 
-#include "pico/stdlib.h"
+#include "pico/time.h"
 #include "pico/double.h"
+#include <stdlib.h>
 
 volatile int64_t divisionCounter;
 volatile int64_t stepCounter;
@@ -15,11 +16,13 @@ volatile uint8_t direction;
 
 volatile uint16_t pitch_1000; //pitch multiplied by 1000
 
+volatile uint16_t speedRPM;
+
 void initialiseQuadrature(){
   direction=0;
   divisionCounter=0;
   stepCounter=0;
-  pitch_1000=1;
+  pitch_1000=750;
 }
 
 volatile uint8_t checkDir() {
@@ -88,4 +91,28 @@ void doPulse(int8_t count){
   }
   doSteps((int8_t) step);
   stepCounter+=step;
+}
+
+uint16_t calcRPM() {
+  static int64_t oldDivisionCounter = 0;
+  static int64_t oldTime = 0;
+  int64_t currentTime;
+  int64_t countDifference;
+  int64_t timeDifference;
+
+  currentTime = time_us_64();
+
+  countDifference = abs((int) (divisionCounter - oldDivisionCounter));
+  timeDifference = abs((int) (currentTime - oldDivisionCounter));
+
+  speedRPM = (uint16_t) ((countDifference / NUM_DIVISIONS) / (timeDifference / 60000000));
+
+  oldTime = currentTime;
+  oldDivisionCounter = divisionCounter;
+
+  return speedRPM;
+}
+
+uint16_t getPitch(){
+  return pitch_1000;
 }

@@ -8,7 +8,6 @@
 #include "display.h"
 #include "display.c"
 
-#include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/time.h"
@@ -33,8 +32,8 @@ void main_core1() {
   initialiseDisplay();
 
   while (true){
-    updateRPM(1234);
-    updatePitch(700);
+    updateRPM(calcRPM());
+    updatePitch(getPitch());
     printDisplay();
   }
 }
