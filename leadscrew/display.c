@@ -176,10 +176,4 @@ void printDisplay(){
   }
   displaySTBWrite(1);
   sleep_us(100);
-
-  //Flashes the LED`
-  sleep_ms(500);
-  gpio25Write(true);
-  sleep_ms(500);
-  gpio25Write(false);
 }

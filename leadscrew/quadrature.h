@@ -1,7 +1,5 @@
-#include "pico/stdlib.h"
-
 #ifndef NUM_DIVISIONS
-#define NUM_DIVISIONS 160 //Technically number of divisions of the quadrature encoder, multiplied by 4
+#define NUM_DIVISIONS 60 //Technically number of divisions of the quadrature encoder, multiplied by 4
 #endif
 
 #ifndef LEADSCREW_PITCH_1000

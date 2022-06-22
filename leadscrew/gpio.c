@@ -1,19 +1,19 @@
 #include "quadrature.h"
 #include "gpio.h"
 #include "stepper.h"
+#include "display.h"
 
 #include "pico/stdlib.h"
+#include <stdio.h>
 
 
 void initGPIO0(){
   gpio_init(QUADRATURE_PIN0);
   gpio_set_dir(QUADRATURE_PIN0, GPIO_IN);
-  gpio_pull_up(QUADRATURE_PIN0);
   gpio_set_irq_enabled_with_callback(QUADRATURE_PIN0, 0b1100, true, &gpioCallback0);
 
   gpio_init(QUADRATURE_PIN1);
   gpio_set_dir(QUADRATURE_PIN1, GPIO_IN);
-  gpio_pull_up(QUADRATURE_PIN1);
   gpio_set_irq_enabled_with_callback(QUADRATURE_PIN1, 0b1100, true, &gpioCallback0);
 
   gpio_init(STEP_PUL_PIN);
@@ -54,12 +54,12 @@ void initGPIO1(){
   gpio_init(FORWARD_PIN);
   gpio_set_dir(FORWARD_PIN, GPIO_IN);
   gpio_pull_up(FORWARD_PIN);
-  gpio_set_irq_enabled_with_callback(FORWARD_PIN, 0b1100, true, &gpioCallback1);
+//  gpio_set_irq_enabled_with_callback(FORWARD_PIN, 0b1100, true, &gpioCallback1);
 
   gpio_init(REVERSE_PIN);
   gpio_set_dir(REVERSE_PIN, GPIO_IN);
   gpio_pull_up(REVERSE_PIN);
-  gpio_set_irq_enabled_with_callback(REVERSE_PIN, 0b1100, true, &gpioCallback1);
+//  gpio_set_irq_enabled_with_callback(REVERSE_PIN, 0b1100, true, &gpioCallback1);
 
   gpio_init(DISPLAY_CLK_PIN);
   gpio_set_dir(DISPLAY_CLK_PIN, GPIO_OUT);
@@ -80,6 +80,7 @@ void gpioCallback0(uint gpio, uint32_t events) { //Events is the state of the in
       } else if (events == 0b0100){
         pulse0irqFall();
       }//Else do nothing
+
       break;
     case QUADRATURE_PIN1:
       if (events == 0b1000){

@@ -9,21 +9,24 @@ volatile uint8_t direction_set;
 //  2 = inverted
 
 void initStepper() {
-  /* code */
+  direction_set=1;
 }
 
 void setDir(){
-  
+  if (direction_set==2) {
+    stepDirWrite(1);
+  } else {
+    stepDirWrite(0);
+  }
 }
 
-void doSteps(int8_t numSteps) {
-  static bool currentState;
-  currentState = ! currentState;
-
+void doSteps(uint16_t numSteps) {
   if (direction_set!=0){
-    for (size_t i = 0; i < numSteps; i++) {
-      stepPulseWrite(currentState);
-      sleep_us(5);
+    for (uint16_t i = 0; i < numSteps; i++) {
+      stepPulseWrite(1);
+      sleep_us(2);
+      stepPulseWrite(0);
+      sleep_us(2);
     }
   }
 }

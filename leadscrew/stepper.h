@@ -11,4 +11,5 @@
 extern volatile uint8_t direction_set;
 
 extern void initStepper();
-extern void doSteps(int8_t numSteps);
+extern void setDir();
+extern void doSteps(uint16_t numSteps);

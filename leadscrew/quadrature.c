@@ -3,93 +3,79 @@
 #include "stepper.h"
 
 #include "pico/time.h"
-#include "pico/double.h"
+#include "pico/float.h"
+#include "pico/stdlib.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-volatile int64_t divisionCounter;
-volatile int64_t stepCounter;
 
-volatile uint8_t direction;
-//  0 = no movement
-//  1 = forwards
-//  2 = backwards
+volatile long long divisionCounter;
+volatile long long stepCounter;
 
 volatile uint16_t pitch_1000; //pitch multiplied by 1000
 
 volatile uint16_t speedRPM;
 
 void initialiseQuadrature(){
-  direction=0;
   divisionCounter=0;
   stepCounter=0;
-  pitch_1000=750;
+  pitch_1000=1500;
 }
 
 volatile uint8_t checkDir() {
-  return direction;
+  return direction_set;
 }
 
 void pulse0irqRise() {
   if (getQuadrature1State()) {
-    direction = 2;
-    doPulse(-1);
-  } else {
-    direction = 1;
     doPulse(1);
+  } else {
+    doPulse(-1);
   }
 }
 
 void pulse1irqRise() {
   if (getQuadrature0State()) {
-    direction = 1;
-    doPulse(1);
-  } else {
     doPulse(-1);
-    direction = 2;
+  } else {
+    doPulse(1);
   }
 }
 
 void pulse0irqFall() {
   if (getQuadrature1State()) {
-    direction = 1;
-    doPulse(1);
-  } else {
-    direction = 2;
     doPulse(-1);
+  } else {
+    doPulse(1);
   }
 }
 
 void pulse1irqFall() {
   if (getQuadrature0State()) {
-    direction = 2;
-    doPulse(-1);
-  } else {
     doPulse(1);
-    direction = 1;
+  } else {
+    doPulse(-1);
   }
 }
 
 void doPulse(int8_t count){
-  float step;
-  divisionCounter+=count;
+  long long step;
+  divisionCounter+=(long long) count;
   //Do calculations for the current desired step
   step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * divisionCounter) / (NUM_DIVISIONS * pitch_1000));
   //Calculates how many steps need to be performed
-  if (stepCounter < 0) {
-    step = step - stepCounter;
-  } else {
-    step = stepCounter - step;
+
+  step = step - stepCounter;
+
+  if (step>0){
+    direction_set=1;
+  }
+  else{
+    direction_set=2;
   }
 
-  //Rounds the number of steps to the smallest number of steps
-  if (step >= 1){
-    step = floor(step);
-  } else if (step <= -1){
-    step = ceil(step);
-  } else {
-    step = 0;
-  }
-  doSteps((int8_t) step);
+  setDir();
+  doSteps((uint16_t) abs(step));
   stepCounter+=step;
 }
 
