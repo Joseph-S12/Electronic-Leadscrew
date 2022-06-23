@@ -5,10 +5,10 @@
 #define QUADRATURE_PIN0 0
 #define QUADRATURE_PIN1 1
 
-#define MM_PITCH_PIN 2
-#define TPI_PITCH_PIN 3
-#define MM_MIN_POWERFEED_PIN 4
-#define INCH_MIN_POWERFEED_PIN 5
+#define METRIC_PIN 2
+#define IMPERIAL_PIN 3
+#define PITCH_PIN 4
+#define POWERFEED_PIN 5
 
 #define INCREASE_PIN 6
 #define DECREASE_PIN 7

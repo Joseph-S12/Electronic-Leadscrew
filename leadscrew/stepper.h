@@ -1,5 +1,3 @@
-#include "pico/stdlib.h"
-
 #ifndef NUM_STEPS
 #define NUM_STEPS 200
 #endif

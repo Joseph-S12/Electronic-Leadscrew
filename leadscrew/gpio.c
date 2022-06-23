@@ -27,21 +27,21 @@ void initGPIO0(){
 }
 
 void initGPIO1(){
-  gpio_init(MM_PITCH_PIN);
-  gpio_set_dir(MM_PITCH_PIN, GPIO_IN);
-  gpio_pull_up(MM_PITCH_PIN);
+  gpio_init(METRIC_PIN);
+  gpio_set_dir(METRIC_PIN, GPIO_IN);
+  gpio_pull_up(METRIC_PIN);
 
-  gpio_init(TPI_PITCH_PIN);
-  gpio_set_dir(TPI_PITCH_PIN, GPIO_IN);
-  gpio_pull_up(TPI_PITCH_PIN);
+  gpio_init(IMPERIAL_PIN);
+  gpio_set_dir(IMPERIAL_PIN, GPIO_IN);
+  gpio_pull_up(IMPERIAL_PIN);
 
-  gpio_init(MM_MIN_POWERFEED_PIN);
-  gpio_set_dir(MM_MIN_POWERFEED_PIN, GPIO_IN);
-  gpio_pull_up(MM_MIN_POWERFEED_PIN);
+  gpio_init(PITCH_PIN);//May need redefining
+  gpio_set_dir(PITCH_PIN, GPIO_IN);
+  gpio_pull_up(PITCH_PIN);
 
-  gpio_init(INCH_MIN_POWERFEED_PIN);
-  gpio_set_dir(INCH_MIN_POWERFEED_PIN, GPIO_IN);
-  gpio_pull_up(INCH_MIN_POWERFEED_PIN);
+  gpio_init(POWERFEED_PIN);//May need redefining
+  gpio_set_dir(POWERFEED_PIN, GPIO_IN);
+  gpio_pull_up(POWERFEED_PIN);
 
   gpio_init(INCREASE_PIN);
   gpio_set_dir(INCREASE_PIN, GPIO_IN);
@@ -94,6 +94,26 @@ void gpioCallback0(uint gpio, uint32_t events) { //Events is the state of the in
   }
 }
 
+// void gpioCallback1(uint gpio, uint32_t events) { //Events is the state of the interrupt mask
+//   switch (gpio) {
+//     case FORWARD_PIN:
+//       if (events == 0b1000){
+//         direction_set = 1;
+//       } else if (events == 0b0100){
+//         direction_set = 0;
+//       }//Else do nothing
+//       break;
+//     case REVERSE_PIN:
+//       if (events == 0b1000){
+//         direction_set = 2;
+//       } else if (events == 0b0100){
+//         direction_set = 0;
+//       }//Else do nothing
+//       break;
+//     default:
+//       break;
+//   }
+// }
 void gpioCallback1(uint gpio, uint32_t events) { //Events is the state of the interrupt mask
   switch (gpio) {
     case FORWARD_PIN:
@@ -121,6 +141,30 @@ bool getQuadrature0State(){
 
 bool getQuadrature1State(){
   return gpio_get(QUADRATURE_PIN1);
+}
+
+bool getMetricState(){
+  return gpio_get(METRIC_PIN);
+}
+
+bool getImperialState(){
+  return gpio_get(IMPERIAL_PIN);
+}
+
+bool getPitchState(){
+  return gpio_get(PITCH_PIN);
+}
+
+bool getPowerfeedState(){
+  return gpio_get(POWERFEED_PIN);
+}
+
+bool getForwardState(){
+  return gpio_get(FORWARD_PIN);
+}
+
+bool getReverseState(){
+  return gpio_get(REVERSE_PIN);
 }
 
 void stepPulseWrite(bool state) {
