@@ -25,7 +25,7 @@ void main() {
 
 
   while (true){
-    completeSteps();
+    doPulse();
   }
 }
 

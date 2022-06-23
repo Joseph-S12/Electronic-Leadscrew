@@ -23,15 +23,10 @@ void setDir(){
 }
 
 void doSteps(uint16_t numSteps) {
-  stepsToDo+=(long long) numSteps;
-}
-
-void completeSteps(){
-  if (direction_set!=0 && stepsToDo>0) {
+  for (size_t i = 0; i < numSteps; i++) {
     stepPulseWrite(1);
-    sleep_us(20);
+    sleep_us(2);
     stepPulseWrite(0);
-    sleep_us(20);
-    stepsToDo--;
+    sleep_us(2);
   }
 }

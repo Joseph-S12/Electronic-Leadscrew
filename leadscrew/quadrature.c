@@ -28,39 +28,38 @@ volatile uint8_t checkDir() {
 
 void pulse0irqRise() {
   if (getQuadrature1State()) {
-    doPulse(1);
+    divisionCounter++;
   } else {
-    doPulse(-1);
+    divisionCounter--;
   }
 }
 
 void pulse1irqRise() {
   if (getQuadrature0State()) {
-    doPulse(-1);
+    divisionCounter--;
   } else {
-    doPulse(1);
+    divisionCounter++;
   }
 }
 
 void pulse0irqFall() {
   if (getQuadrature1State()) {
-    doPulse(-1);
+    divisionCounter--;
   } else {
-    doPulse(1);
+    divisionCounter++;
   }
 }
 
 void pulse1irqFall() {
   if (getQuadrature0State()) {
-    doPulse(1);
+    divisionCounter++;
   } else {
-    doPulse(-1);
+    divisionCounter--;
   }
 }
 
-void doPulse(int8_t count){
+void doPulse(){
   long long step;
-  divisionCounter+=(long long) count;
   //Do calculations for the current desired step
   step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * divisionCounter) / (NUM_DIVISIONS * pitch_1000));
   //Calculates how many steps need to be performed
