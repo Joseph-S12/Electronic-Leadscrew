@@ -4,8 +4,6 @@
 #include "pico/time.h"
 
 volatile uint8_t direction_set;
-
-volatile long long stepsToDo = 0;
 //  0 = no movement
 //  1 = normal
 //  2 = inverted
