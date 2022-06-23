@@ -16,10 +16,15 @@ volatile uint16_t pitch_1000; //pitch multiplied by 1000
 
 volatile uint16_t speedRPM;
 
+volatile bool quad0State;
+volatile bool quad1State;
+
 void initialiseQuadrature(){
   divisionCounter=0;
   stepCounter=0;
   pitch_1000=1500;
+  quad0State=getQuadrature0State();
+  quad1State=getQuadrature1State();
 }
 
 volatile uint8_t checkDir() {
@@ -27,7 +32,8 @@ volatile uint8_t checkDir() {
 }
 
 void pulse0irqRise() {
-  if (getQuadrature1State()) {
+  quad0State=true;
+  if (quad1State) {
     divisionCounter++;
   } else {
     divisionCounter--;
@@ -35,7 +41,8 @@ void pulse0irqRise() {
 }
 
 void pulse1irqRise() {
-  if (getQuadrature0State()) {
+  quad1State=true;
+  if (quad0State) {
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -43,7 +50,8 @@ void pulse1irqRise() {
 }
 
 void pulse0irqFall() {
-  if (getQuadrature1State()) {
+  quad0State=false;
+  if (quad1State) {
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -51,7 +59,8 @@ void pulse0irqFall() {
 }
 
 void pulse1irqFall() {
-  if (getQuadrature0State()) {
+  quad1State=false;
+  if (quad0State) {
     divisionCounter++;
   } else {
     divisionCounter--;
