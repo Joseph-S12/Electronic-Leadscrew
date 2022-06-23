@@ -31,4 +31,5 @@ int getLeadscrewMode(){
   } else if (getReverseState()) {
     state+=16;
   }
+  return state;
 }
