@@ -4,6 +4,8 @@
 #include "pico/time.h"
 
 volatile uint8_t direction_set;
+
+volatile long long stepsToDo = 0;
 //  0 = no movement
 //  1 = normal
 //  2 = inverted
@@ -21,12 +23,15 @@ void setDir(){
 }
 
 void doSteps(uint16_t numSteps) {
-  if (direction_set!=0){
-    for (uint16_t i = 0; i < numSteps; i++) {
-      stepPulseWrite(1);
-      sleep_us(2);
-      stepPulseWrite(0);
-      sleep_us(2);
-    }
+  stepsToDo+=(long long) numSteps;
+}
+
+void completeSteps(){
+  if (direction_set!=0 && stepsToDo>0) {
+    stepPulseWrite(1);
+    sleep_us(20);
+    stepPulseWrite(0);
+    sleep_us(20);
+    stepsToDo--;
   }
 }

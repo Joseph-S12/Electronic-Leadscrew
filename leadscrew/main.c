@@ -25,7 +25,7 @@ void main() {
 
 
   while (true){
-    sleep_ms(1000);
+    completeSteps();
   }
 }
 

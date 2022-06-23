@@ -66,7 +66,7 @@ void doPulse(int8_t count){
   //Calculates how many steps need to be performed
 
   step = step - stepCounter;
-
+  stepCounter+=step;
   if (step>0){
     direction_set=1;
   }
@@ -76,7 +76,6 @@ void doPulse(int8_t count){
 
   setDir();
   doSteps((uint16_t) abs(step));
-  stepCounter+=step;
 }
 
 uint16_t calcRPM() {
