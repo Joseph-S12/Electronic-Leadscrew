@@ -1,8 +1,9 @@
 #include "gpio.h"
+#include "buttons.h"
 #include "pico/stdlib.h"
 
 void initButtons(){
-  leadscrewMode=getLeadscrewMode();
+  
 }
 
 int getLeadscrewMode(){

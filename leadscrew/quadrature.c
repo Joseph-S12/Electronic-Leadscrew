@@ -12,6 +12,7 @@
 volatile long long divisionCounter;
 volatile long long stepCounter;
 
+
 volatile uint16_t pitch_1000; //pitch multiplied by 1000
 
 volatile uint16_t speedRPM;
@@ -33,7 +34,8 @@ volatile uint8_t checkDir() {
 
 void pulse0irqRise() {
   quad0State=true;
-  if (quad1State) {
+  // if (quad1State) {
+  if (getQuadrature1State()){
     divisionCounter++;
   } else {
     divisionCounter--;
@@ -42,7 +44,8 @@ void pulse0irqRise() {
 
 void pulse1irqRise() {
   quad1State=true;
-  if (quad0State) {
+  // if (quad0State) {
+  if (getQuadrature0State()){
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -51,7 +54,8 @@ void pulse1irqRise() {
 
 void pulse0irqFall() {
   quad0State=false;
-  if (quad1State) {
+  // if (quad1State) {
+  if (getQuadrature1State()){
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -60,7 +64,8 @@ void pulse0irqFall() {
 
 void pulse1irqFall() {
   quad1State=false;
-  if (quad0State) {
+  // if (quad0State) {
+  if (getQuadrature0State()){
     divisionCounter++;
   } else {
     divisionCounter--;
@@ -69,8 +74,9 @@ void pulse1irqFall() {
 
 void doPulse(){
   long long step;
+  long long currentDivisionCounter=divisionCounter;
   //Do calculations for the current desired step
-  step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * divisionCounter) / (NUM_DIVISIONS * pitch_1000));
+  step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * currentDivisionCounter) / (NUM_DIVISIONS * pitch_1000));
   //Calculates how many steps need to be performed
 
   step = step - stepCounter;

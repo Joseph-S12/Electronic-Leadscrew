@@ -10,10 +10,12 @@
 void initGPIO0(){
   gpio_init(QUADRATURE_PIN0);
   gpio_set_dir(QUADRATURE_PIN0, GPIO_IN);
+  gpio_pull_up(QUADRATURE_PIN0);
   gpio_set_irq_enabled_with_callback(QUADRATURE_PIN0, 0b1100, true, &gpioCallback0);
 
   gpio_init(QUADRATURE_PIN1);
   gpio_set_dir(QUADRATURE_PIN1, GPIO_IN);
+  gpio_pull_up(QUADRATURE_PIN1);
   gpio_set_irq_enabled_with_callback(QUADRATURE_PIN1, 0b1100, true, &gpioCallback0);
 
   gpio_init(STEP_PUL_PIN);
@@ -29,36 +31,36 @@ void initGPIO0(){
 void initGPIO1(){
   gpio_init(METRIC_PIN);
   gpio_set_dir(METRIC_PIN, GPIO_IN);
-  gpio_pull_up(METRIC_PIN);
+  gpio_pull_down(METRIC_PIN);
 
   gpio_init(IMPERIAL_PIN);
   gpio_set_dir(IMPERIAL_PIN, GPIO_IN);
-  gpio_pull_up(IMPERIAL_PIN);
+  gpio_pull_down(IMPERIAL_PIN);
 
   gpio_init(PITCH_PIN);//May need redefining
   gpio_set_dir(PITCH_PIN, GPIO_IN);
-  gpio_pull_up(PITCH_PIN);
+  gpio_pull_down(PITCH_PIN);
 
   gpio_init(POWERFEED_PIN);//May need redefining
   gpio_set_dir(POWERFEED_PIN, GPIO_IN);
-  gpio_pull_up(POWERFEED_PIN);
+  gpio_pull_down(POWERFEED_PIN);
 
   gpio_init(INCREASE_PIN);
   gpio_set_dir(INCREASE_PIN, GPIO_IN);
-  gpio_pull_up(INCREASE_PIN);
+  gpio_pull_down(INCREASE_PIN);
 
   gpio_init(DECREASE_PIN);
   gpio_set_dir(DECREASE_PIN, GPIO_IN);
-  gpio_pull_up(DECREASE_PIN);
+  gpio_pull_down(DECREASE_PIN);
 
   gpio_init(FORWARD_PIN);
   gpio_set_dir(FORWARD_PIN, GPIO_IN);
-  gpio_pull_up(FORWARD_PIN);
+  gpio_pull_down(FORWARD_PIN);
 //  gpio_set_irq_enabled_with_callback(FORWARD_PIN, 0b1100, true, &gpioCallback1);
 
   gpio_init(REVERSE_PIN);
   gpio_set_dir(REVERSE_PIN, GPIO_IN);
-  gpio_pull_up(REVERSE_PIN);
+  gpio_pull_down(REVERSE_PIN);
 //  gpio_set_irq_enabled_with_callback(REVERSE_PIN, 0b1100, true, &gpioCallback1);
 
   gpio_init(DISPLAY_CLK_PIN);

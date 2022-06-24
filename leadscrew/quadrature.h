@@ -14,7 +14,7 @@ extern void pulse1irqRise();
 extern void pulse0irqFall();
 extern void pulse1irqFall();
 
-extern void doPulse(int8_t);
+extern void doPulse();
 
 extern uint16_t calcRPM();
 extern uint16_t getPitch();
