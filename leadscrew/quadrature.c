@@ -11,6 +11,9 @@
 
 volatile long long divisionCounter;
 volatile long long stepCounter;
+volatile uint64_t lastPulseTime;
+volatile uint64_t currentTime;
+volatile int diff;
 
 
 volatile uint16_t pitch_1000; //pitch multiplied by 1000
@@ -23,6 +26,7 @@ volatile bool quad1State;
 void initialiseQuadrature(){
   divisionCounter=0;
   stepCounter=0;
+  lastPulseTime=time_us_64();
   pitch_1000=1500;
   quad0State=getQuadrature0State();
   quad1State=getQuadrature1State();
@@ -33,6 +37,9 @@ volatile uint8_t checkDir() {
 }
 
 void pulse0irqRise() {
+  currentTime = time_us_64();
+  diff = (int) (currentTime - lastPulseTime);
+  lastPulseTime = currentTime;
   quad0State=true;
   // if (quad1State) {
   if (getQuadrature1State()){
@@ -43,6 +50,9 @@ void pulse0irqRise() {
 }
 
 void pulse1irqRise() {
+  currentTime = time_us_64();
+  diff = (int) (currentTime - lastPulseTime);
+  lastPulseTime = currentTime;
   quad1State=true;
   // if (quad0State) {
   if (getQuadrature0State()){
@@ -53,6 +63,9 @@ void pulse1irqRise() {
 }
 
 void pulse0irqFall() {
+  currentTime = time_us_64();
+  diff = (int) (currentTime - lastPulseTime);
+  lastPulseTime = currentTime;
   quad0State=false;
   // if (quad1State) {
   if (getQuadrature1State()){
@@ -63,6 +76,9 @@ void pulse0irqFall() {
 }
 
 void pulse1irqFall() {
+  currentTime = time_us_64();
+  diff = (int) (currentTime - lastPulseTime);
+  lastPulseTime = currentTime;
   quad1State=false;
   // if (quad0State) {
   if (getQuadrature0State()){
@@ -89,8 +105,11 @@ void doPulse(){
   }
 
   setDir();
-  doSteps((uint16_t) abs(step));
+  if (diff<80 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 10);
+  else if (diff<200 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 40);
+  else doSteps((uint16_t) abs(step), 100);
 }
+
 
 uint16_t calcRPM() {
   static int64_t oldDivisionCounter = 0;

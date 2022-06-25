@@ -1,5 +1,5 @@
 #ifndef NUM_DIVISIONS
-#define NUM_DIVISIONS 60 //Technically number of divisions of the quadrature encoder, multiplied by 4
+#define NUM_DIVISIONS 500 //Technically number of divisions of the quadrature encoder, multiplied by 4
 #endif
 
 #ifndef LEADSCREW_PITCH_1000
@@ -15,6 +15,7 @@ extern void pulse0irqFall();
 extern void pulse1irqFall();
 
 extern void doPulse();
+extern int calcPulseSpeed(uint16_t);
 
 extern uint16_t calcRPM();
 extern uint16_t getPitch();

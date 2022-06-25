@@ -4,7 +4,6 @@
 #include "pico/time.h"
 
 volatile uint8_t direction_set;
-volatile uint64_t lastPulseTime;
 //  0 = no movement
 //  1 = normal
 //  2 = inverted
@@ -22,20 +21,7 @@ void setDir(){
   }
 }
 
-int calcPulseSpeed(uint16_t numSteps){
-  uint64_t currentTime = time_us_64();
-  uint64_t diff = currentTime - lastPulseTime;
-  lastPulseTime = currentTime;
-  if (diff > 1000*numSteps){
-    return 1000;
-  }
-  else{
-    return (int) (diff / numSteps);
-  }
-}
-
-void doSteps(uint16_t numSteps) {
-  int pulseLen = calcPulseSpeed();
+void doSteps(uint16_t numSteps, int pulseLen) {
   for (size_t i = 0; i < numSteps; i++) {
     stepPulseWrite(1);
     sleep_us(pulseLen);

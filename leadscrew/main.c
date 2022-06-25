@@ -27,7 +27,7 @@ void main() {
 
 
   while (true){
-    doPulse();
+//  doPulse();
   }
 }
 
@@ -40,6 +40,7 @@ void main_core1() {
   initStepper();
 
   while (true){
+    doPulse();
   //   updateRPM(calcRPM());
   //   updatePitch(getPitch());
   //   printDisplay();
