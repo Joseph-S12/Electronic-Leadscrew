@@ -99,8 +99,9 @@ void initialiseDisplay() {
 }
 
 void updateStatus(int status){
+
   for (size_t i = 0; i < 8; i++) {
-    indicatorLEDs[i] = ((status & 2^i) == 2^i);
+    indicatorLEDs[i] = ((status & (int) pow(2, (double) i))!=0);
   }
 }
 

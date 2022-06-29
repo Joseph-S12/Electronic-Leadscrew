@@ -37,12 +37,11 @@ void main() {
     spindleSpeed = calcRPM();
     updateRPM(spindleSpeed);
     if (spindleSpeed==0){
-      putchar('h');
-      state=getLeadscrewMode(spindleSpeed);
+      state=getLeadscrewMode();
       checkIncDec(state);
       updatePitch(getPitch());
-      updateStatus(state);
-    }
+    } else state |= 32;
+    updateStatus(state);
     printDisplay();
   }
 }

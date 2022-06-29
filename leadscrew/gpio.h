@@ -13,8 +13,8 @@
 #define INCREASE_PIN 6
 #define DECREASE_PIN 7
 
-#define FORWARD_PIN 9
-#define REVERSE_PIN 10
+#define FORWARD_PIN 8
+#define REVERSE_PIN 9
 
 #define STEP_DIR_PIN 11
 #define STEP_PUL_PIN 12

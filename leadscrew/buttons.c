@@ -6,7 +6,7 @@ void initButtons(){
 
 }
 
-int getLeadscrewMode(uint16_t spindleSpeed){
+int getLeadscrewMode(){
   //0 = Off
   //1 = mm pitch
   //2 = TPI
@@ -26,8 +26,6 @@ int getLeadscrewMode(uint16_t spindleSpeed){
   if ((getForwardState() && getReverseState()) || (!(getForwardState()) && !(getReverseState()))) state=0;
   else if (getReverseState()) state+=16;
 
-  if (spindleSpeed!=0) state+=32;
-
   printf("%i\n", state);
 
   return state;
@@ -40,7 +38,7 @@ void checkIncDec(int state){
     else if (state & 4 == 4) setLeadscrewPitch(getPitch()+5);
   }
   else if (getDecrementState()){
-    if (state & 1 == 1) setLeadscrewPitch(getPitch()-50);
-    else if (state & 4 == 4) setLeadscrewPitch(getPitch()-5);
+    if ((state & 1 == 1) && getPitch()>50) setLeadscrewPitch(getPitch()-50);
+    else if ((state & 4 == 4) && getPitch()>5) setLeadscrewPitch(getPitch()-5);
   }
 }
