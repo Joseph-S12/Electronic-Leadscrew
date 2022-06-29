@@ -31,7 +31,7 @@ void initialiseDisplay() {
 
   //Init indicatorLEDs
   for (size_t i = 0; i < 8; i++) {
-    indicatorLEDs[i]=0;
+    indicatorLEDs[i]=1;
   }
 
   //Init display digits
@@ -92,6 +92,16 @@ void initialiseDisplay() {
   gpio25Write(true);
   sleep_ms(500);
   gpio25Write(false);
+
+  updateRPM(0000);
+  updatePitch(1500);
+  printDisplay();
+}
+
+void updateStatus(int status){
+  for (size_t i = 0; i < 8; i++) {
+    indicatorLEDs[i] = ((status & 2^i) == 2^i);
+  }
 }
 
 void updateRPM(uint16_t rpm_int) {

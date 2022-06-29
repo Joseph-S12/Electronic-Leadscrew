@@ -1,3 +1,3 @@
 
 extern void initButtons();
-extern int getLeadscrewMode();
+extern int getLeadscrewMode(uint16_t);

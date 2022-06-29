@@ -26,6 +26,6 @@ void doSteps(uint16_t numSteps, int pulseLen) {
     stepPulseWrite(1);
     sleep_us(pulseLen);
     stepPulseWrite(0);
-    sleep_us(pulseLen);
+    sleep_us(5);
   }
 }

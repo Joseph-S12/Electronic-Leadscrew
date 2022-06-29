@@ -18,23 +18,39 @@
 //This is the initialisation code for core 0. Everything on this core after initialisation is interrupt driven and deals with the quadrature encoder and driving the stepper.
 //It is interrupted by the quadrature encoder pulses.
 void main() {
+  int state;
+  uint16_t spindleSpeed;
+
   initialiseQuadrature();
   multicore_launch_core1(&main_core1);
 
   initGPIO0();
   // initStepper();
+  initialiseDisplay();
+  initButtons();
   stdio_init_all();
 
 
   while (true){
-//  doPulse();
+    // doPulse();
+    sleep_ms(500);
+    spindleSpeed = calcRPM();
+    updateRPM(spindleSpeed);
+    if (spindleSpeed==0){
+      putchar('h');
+      state=getLeadscrewMode(spindleSpeed);
+      checkIncDec(state);
+      updatePitch(getPitch());
+      updateStatus(state);
+    }
+    printDisplay();
   }
 }
 
 //This is the initialisation and run-time code of core 1. It deals with the 'user interface' (7 segment display and buttons).
 //It is not interrupt driven, with the exception of the forwards/reverse switch
 void main_core1() {
-  // initGPIO1();
+  initGPIO1();
   // initialiseDisplay();
   // initButtons();
   initStepper();

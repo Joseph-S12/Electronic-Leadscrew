@@ -18,17 +18,20 @@ void initGPIO0(){
   gpio_pull_up(QUADRATURE_PIN1);
   gpio_set_irq_enabled_with_callback(QUADRATURE_PIN1, 0b1100, true, &gpioCallback0);
 
-  gpio_init(STEP_PUL_PIN);
-  gpio_set_dir(STEP_PUL_PIN, GPIO_OUT);
+  // gpio_init(STEP_PUL_PIN);
+  // gpio_set_dir(STEP_PUL_PIN, GPIO_OUT);
+  //
+  // gpio_init(STEP_DIR_PIN);
+  // gpio_set_dir(STEP_DIR_PIN, GPIO_OUT);
 
-  gpio_init(STEP_DIR_PIN);
-  gpio_set_dir(STEP_DIR_PIN, GPIO_OUT);
+  gpio_init(21);
+  gpio_set_dir(21, GPIO_OUT);
 
   gpio_init(25);
   gpio_set_dir(25, GPIO_OUT);
-}
 
-void initGPIO1(){
+
+  //User interface IO
   gpio_init(METRIC_PIN);
   gpio_set_dir(METRIC_PIN, GPIO_IN);
   gpio_pull_down(METRIC_PIN);
@@ -71,6 +74,59 @@ void initGPIO1(){
 
   gpio_init(DISPLAY_STB_PIN);
   gpio_set_dir(DISPLAY_STB_PIN, GPIO_OUT);
+}
+
+void initGPIO1(){
+  //Stepper motor control
+  gpio_init(STEP_PUL_PIN);
+  gpio_set_dir(STEP_PUL_PIN, GPIO_OUT);
+
+  gpio_init(STEP_DIR_PIN);
+  gpio_set_dir(STEP_DIR_PIN, GPIO_OUT);
+
+
+//   gpio_init(METRIC_PIN);
+//   gpio_set_dir(METRIC_PIN, GPIO_IN);
+//   gpio_pull_down(METRIC_PIN);
+//
+//   gpio_init(IMPERIAL_PIN);
+//   gpio_set_dir(IMPERIAL_PIN, GPIO_IN);
+//   gpio_pull_down(IMPERIAL_PIN);
+//
+//   gpio_init(PITCH_PIN);//May need redefining
+//   gpio_set_dir(PITCH_PIN, GPIO_IN);
+//   gpio_pull_down(PITCH_PIN);
+//
+//   gpio_init(POWERFEED_PIN);//May need redefining
+//   gpio_set_dir(POWERFEED_PIN, GPIO_IN);
+//   gpio_pull_down(POWERFEED_PIN);
+//
+//   gpio_init(INCREASE_PIN);
+//   gpio_set_dir(INCREASE_PIN, GPIO_IN);
+//   gpio_pull_down(INCREASE_PIN);
+//
+//   gpio_init(DECREASE_PIN);
+//   gpio_set_dir(DECREASE_PIN, GPIO_IN);
+//   gpio_pull_down(DECREASE_PIN);
+//
+//   gpio_init(FORWARD_PIN);
+//   gpio_set_dir(FORWARD_PIN, GPIO_IN);
+//   gpio_pull_down(FORWARD_PIN);
+// //  gpio_set_irq_enabled_with_callback(FORWARD_PIN, 0b1100, true, &gpioCallback1);
+//
+//   gpio_init(REVERSE_PIN);
+//   gpio_set_dir(REVERSE_PIN, GPIO_IN);
+//   gpio_pull_down(REVERSE_PIN);
+// //  gpio_set_irq_enabled_with_callback(REVERSE_PIN, 0b1100, true, &gpioCallback1);
+//
+//   gpio_init(DISPLAY_CLK_PIN);
+//   gpio_set_dir(DISPLAY_CLK_PIN, GPIO_OUT);
+//
+//   gpio_init(DISPLAY_SIO_PIN);
+//   gpio_set_dir(DISPLAY_SIO_PIN, GPIO_OUT);
+//
+//   gpio_init(DISPLAY_STB_PIN);
+//   gpio_set_dir(DISPLAY_STB_PIN, GPIO_OUT);
 
 }
 
@@ -168,6 +224,15 @@ bool getForwardState(){
 bool getReverseState(){
   return gpio_get(REVERSE_PIN);
 }
+
+bool getIncrementState(){
+  return gpio_get(INCREASE_PIN);
+}
+
+bool getDecrementState(){
+  return gpio_get(DECREASE_PIN);
+}
+
 
 void stepPulseWrite(bool state) {
   gpio_put(STEP_PUL_PIN,state);

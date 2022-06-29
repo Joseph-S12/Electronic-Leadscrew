@@ -15,8 +15,8 @@ volatile uint64_t lastPulseTime;
 volatile uint64_t currentTime;
 volatile int diff;
 
-
 volatile uint16_t pitch_1000; //pitch multiplied by 1000
+volatile bool reverse;
 
 volatile uint16_t speedRPM;
 
@@ -27,9 +27,17 @@ void initialiseQuadrature(){
   divisionCounter=0;
   stepCounter=0;
   lastPulseTime=time_us_64();
-  pitch_1000=1500;
+  pitch_1000=750;
   quad0State=getQuadrature0State();
   quad1State=getQuadrature1State();
+}
+
+void setLeadscrewPitch(uint16_t pitch){
+  pitch_1000=pitch;
+}
+
+void setLeadscrewReverse(bool reverseThread){
+  reverse=reverseThread;
 }
 
 volatile uint8_t checkDir() {
@@ -92,12 +100,12 @@ void doPulse(){
   long long step;
   long long currentDivisionCounter=divisionCounter;
   //Do calculations for the current desired step
-  step = ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * currentDivisionCounter) / (NUM_DIVISIONS * pitch_1000));
+  step = (long long) ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * (float) currentDivisionCounter) / (NUM_DIVISIONS * (float) pitch_1000));
   //Calculates how many steps need to be performed
 
   step = step - stepCounter;
   stepCounter+=step;
-  if (step>0){
+  if ((step>0 && reverse==false) || (step<=0 && reverse==true)){
     direction_set=1;
   }
   else{
@@ -105,32 +113,38 @@ void doPulse(){
   }
 
   setDir();
-  if (diff<80 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 10);
-  else if (diff<200 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 40);
-  else doSteps((uint16_t) abs(step), 100);
+  if (diff<50 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 5);
+  else if (diff<200 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 20);
+  else if (diff<500 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 50);
+  else if (diff<1000 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 100);
+  else doSteps((uint16_t) abs(step), 200);
 }
 
 
 uint16_t calcRPM() {
-  static int64_t oldDivisionCounter = 0;
-  static int64_t oldTime = 0;
+  static int64_t oldDivisionCounter;
+  static int64_t oldTime;
   int64_t currentTime;
-  int64_t countDifference;
-  int64_t timeDifference;
+  long countDifference;
+  long timeDifference;
 
   currentTime = time_us_64();
 
-  countDifference = abs((int) (divisionCounter - oldDivisionCounter));
-  timeDifference = abs((int) (currentTime - oldDivisionCounter));
+  countDifference = (long) abs((int) (divisionCounter - oldDivisionCounter));
+  timeDifference = (long) abs((int) (currentTime - oldTime));
 
-  speedRPM = (uint16_t) ((countDifference / NUM_DIVISIONS) / (timeDifference / 60000000));
+  speedRPM = (uint16_t) (((float) countDifference / (NUM_DIVISIONS)) / ((float) timeDifference / 60000000));
 
   oldTime = currentTime;
   oldDivisionCounter = divisionCounter;
-
+  // printf("%i, %lld\n", speedRPM, (long long) (((float) countDifference / NUM_DIVISIONS) / ((float) timeDifference / 60000000)));
   return speedRPM;
 }
 
 uint16_t getPitch(){
   return pitch_1000;
+}
+
+void setPitch(uint16_t pitch){
+  pitch_1000=pitch;
 }
