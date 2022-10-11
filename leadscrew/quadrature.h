@@ -1,5 +1,5 @@
 #ifndef NUM_DIVISIONS
-#define NUM_DIVISIONS 60 //Technically number of divisions of the quadrature encoder, multiplied by 2
+#define NUM_DIVISIONS 256 //Technically number of divisions of the quadrature encoder, multiplied by 2
 #endif
 
 #ifndef LEADSCREW_PITCH_1000
