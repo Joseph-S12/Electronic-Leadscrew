@@ -2,8 +2,11 @@
 #include "buttons.h"
 #include "pico/stdlib.h"
 
-void initButtons(){
+unsigned int mmPitch, mmFeed;
 
+void initButtons(){
+  mmPitch=750;
+  mmFeed=5;
 }
 
 int getLeadscrewMode(){
@@ -17,16 +20,22 @@ int getLeadscrewMode(){
 
   int state = 0;
 
-  if (getMetricState() && getPitchState()) state = 1;
+  if (getMetricState() && getPitchState()) {
+    state = 1;
+    setLeadscrewPitch((uint16_t) mmPitch);
+  }
   else if (getImperialState() && getPitchState()) state = 2;
-  else if (getMetricState() && getPowerfeedState()) state = 4;
+  else if (getMetricState() && getPowerfeedState()) {
+    state = 4;
+    setLeadscrewPitch((uint16_t) mmFeed);
+  }
   else if (getImperialState() && getPowerfeedState()) state = 8;
   else state = 0;
 
+
+
   if ((getForwardState() && getReverseState()) || (!(getForwardState()) && !(getReverseState()))) state=0;
   else if (getReverseState()) state+=16;
-
-  printf("%i\n", state);
 
   return state;
 }
@@ -34,11 +43,23 @@ int getLeadscrewMode(){
 void checkIncDec(int state){
   //Checks if operator is changing the pitch/feedrate;
   if (getIncrementState()){
-    if (state & 1 == 1) setLeadscrewPitch(getPitch()+50);
-    else if (state & 4 == 4) setLeadscrewPitch(getPitch()+5);
+    // printf("%i %i, %i %i\n", (state & 4), ((state & 4) == 4), (state & 1), (state & 1 == 1));
+    if (state & 1 == 1){
+      mmPitch+=50;
+      setLeadscrewPitch((uint16_t) mmPitch);
+    } else if ((state & 4) == 4){
+      putchar('x');
+      mmFeed+=1;
+      setLeadscrewPitch((uint16_t) mmFeed);
+    }
   }
   else if (getDecrementState()){
-    if ((state & 1 == 1) && getPitch()>50) setLeadscrewPitch(getPitch()-50);
-    else if ((state & 4 == 4) && getPitch()>5) setLeadscrewPitch(getPitch()-5);
+    if ((state & 1 == 1) && mmPitch>50){
+      mmPitch-=50;
+      setLeadscrewPitch((uint16_t) mmPitch);
+    } else if (((state & 4) == 4) && mmFeed>1){
+      mmFeed-=1;
+      setLeadscrewPitch((uint16_t) mmFeed);
+    }
   }
 }
