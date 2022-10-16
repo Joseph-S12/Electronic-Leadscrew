@@ -48,7 +48,6 @@ void checkIncDec(int state){
       mmPitch+=50;
       setLeadscrewPitch((uint16_t) mmPitch);
     } else if ((state & 4) == 4){
-      putchar('x');
       mmFeed+=1;
       setLeadscrewPitch((uint16_t) mmFeed);
     }

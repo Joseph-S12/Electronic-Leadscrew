@@ -32,6 +32,11 @@ void initialiseQuadrature(){
   quad1State=getQuadrature1State();
 }
 
+void resetCounters(){
+  divisionCounter = 0;
+  stepCounter = 0;
+}
+
 void setLeadscrewPitch(uint16_t pitch){
   pitch_1000=pitch;
 }
@@ -100,12 +105,18 @@ void doPulse(){
   long long step;
   long long currentDivisionCounter=divisionCounter;
   //Do calculations for the current desired step
-  step = (long long) ((NUM_STEPS * NUM_MICROSTEPS * LEADSCREW_PITCH_1000 * (float) currentDivisionCounter) / (NUM_DIVISIONS * (float) pitch_1000));
+  if (currentDivisionCounter!=0){
+    step = (long long) ((NUM_STEPS * NUM_MICROSTEPS * (float) pitch_1000 * (float) currentDivisionCounter) / (NUM_DIVISIONS * LEADSCREW_PITCH_1000));
+  }
+  else{
+    step = stepCounter;
+  }
   //Calculates how many steps need to be performed
 
   step = step - stepCounter;
   stepCounter+=step;
-  if ((step>0 && reverse==false) || (step<=0 && reverse==true)){
+  // printf("%ld, %ld\n", step, stepCounter);
+  if ((step>0 && reverse==false) || (step<0 && reverse==true)){
     direction_set=1;
   }
   else{
@@ -113,11 +124,12 @@ void doPulse(){
   }
 
   setDir();
-  if (diff<50 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 5);
-  else if (diff<200 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 20);
-  else if (diff<500 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 50);
-  else if (diff<1000 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 100);
-  else doSteps((uint16_t) abs(step), 200);
+  // if (diff<50 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 5);
+  // else if (diff<200 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 20);
+  // else if (diff<500 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 50);
+  // else if (diff<1000 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 100);
+  // else doSteps((uint16_t) abs(step), 200);
+  doSteps((uint16_t) abs(step), 100);
 }
 
 

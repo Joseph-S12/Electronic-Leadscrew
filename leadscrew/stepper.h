@@ -3,7 +3,7 @@
 #endif
 
 #ifndef NUM_MICROSTEPS
-#define NUM_MICROSTEPS 2
+#define NUM_MICROSTEPS 1
 #endif
 
 extern volatile uint8_t direction_set;

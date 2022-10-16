@@ -37,6 +37,7 @@ void main() {
     spindleSpeed = calcRPM();
     updateRPM(spindleSpeed);
     if (spindleSpeed==0){
+      //resetCounters();
       state=getLeadscrewMode();
       checkIncDec(state);
       updatePitch(getPitch());

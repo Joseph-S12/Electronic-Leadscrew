@@ -176,17 +176,17 @@ void gpioCallback1(uint gpio, uint32_t events) { //Events is the state of the in
   switch (gpio) {
     case FORWARD_PIN:
       if (events == 0b1000){
-        direction_set = 1;
-      } else if (events == 0b0100){
-        direction_set = 0;
-      }//Else do nothing
+        reverse=false;}
+      // } else if (events == 0b0100){
+      //   //direction_set = 0;
+      // }//Else do nothing
       break;
     case REVERSE_PIN:
       if (events == 0b1000){
-        direction_set = 2;
-      } else if (events == 0b0100){
-        direction_set = 0;
-      }//Else do nothing
+        reverse=true;}
+      // } else if (events == 0b0100){
+      //   //direction_set = 0;
+      // }//Else do nothing
       break;
     default:
       break;
