@@ -10,6 +10,8 @@ extern void resetCounters();
 
 extern volatile bool reverse;
 
+extern volatile long divisionCounter;
+
 extern void initialiseQuadrature();
 extern volatile uint8_t checkDir();
 

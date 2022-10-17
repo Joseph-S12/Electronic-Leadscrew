@@ -9,8 +9,8 @@
 #include <stdio.h>
 
 
-volatile long long divisionCounter;
-volatile long long stepCounter;
+volatile long divisionCounter;
+volatile long stepCounter;
 volatile uint64_t lastPulseTime;
 volatile uint64_t currentTime;
 volatile int diff;
@@ -54,8 +54,8 @@ void pulse0irqRise() {
   diff = (int) (currentTime - lastPulseTime);
   lastPulseTime = currentTime;
   quad0State=true;
-  // if (quad1State) {
-  if (getQuadrature1State()){
+  if (quad1State) {
+  //if (getQuadrature1State()){
     divisionCounter++;
   } else {
     divisionCounter--;
@@ -67,8 +67,8 @@ void pulse1irqRise() {
   diff = (int) (currentTime - lastPulseTime);
   lastPulseTime = currentTime;
   quad1State=true;
-  // if (quad0State) {
-  if (getQuadrature0State()){
+  if (quad0State) {
+  // if (getQuadrature0State()){
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -80,8 +80,8 @@ void pulse0irqFall() {
   diff = (int) (currentTime - lastPulseTime);
   lastPulseTime = currentTime;
   quad0State=false;
-  // if (quad1State) {
-  if (getQuadrature1State()){
+  if (quad1State) {
+  // if (getQuadrature1State()){
     divisionCounter--;
   } else {
     divisionCounter++;
@@ -93,8 +93,8 @@ void pulse1irqFall() {
   diff = (int) (currentTime - lastPulseTime);
   lastPulseTime = currentTime;
   quad1State=false;
-  // if (quad0State) {
-  if (getQuadrature0State()){
+  if (quad0State) {
+  // if (getQuadrature0State()){
     divisionCounter++;
   } else {
     divisionCounter--;
@@ -102,11 +102,11 @@ void pulse1irqFall() {
 }
 
 void doPulse(){
-  long long step;
-  long long currentDivisionCounter=divisionCounter;
+  long step;
+  long currentDivisionCounter=divisionCounter;
   //Do calculations for the current desired step
   if (currentDivisionCounter!=0){
-    step = (long long) ((NUM_STEPS * NUM_MICROSTEPS * (float) pitch_1000 * (float) currentDivisionCounter) / (NUM_DIVISIONS * LEADSCREW_PITCH_1000));
+    step = (long) ((NUM_STEPS * NUM_MICROSTEPS * (float) pitch_1000 * (float) currentDivisionCounter) / (NUM_DIVISIONS * LEADSCREW_PITCH_1000));
   }
   else{
     step = stepCounter;
@@ -129,7 +129,7 @@ void doPulse(){
   // else if (diff<500 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 50);
   // else if (diff<1000 * NUM_MICROSTEPS) doSteps((uint16_t) abs(step), 100);
   // else doSteps((uint16_t) abs(step), 200);
-  doSteps((uint16_t) abs(step), 100);
+  doSteps((uint16_t) abs(step), 5);
 }
 
 
@@ -149,7 +149,7 @@ uint16_t calcRPM() {
 
   oldTime = currentTime;
   oldDivisionCounter = divisionCounter;
-  // printf("%i, %lld\n", speedRPM, (long long) (((float) countDifference / NUM_DIVISIONS) / ((float) timeDifference / 60000000)));
+  // printf("%i, %lld\n", speedRPM, (long) (((float) countDifference / NUM_DIVISIONS) / ((float) timeDifference / 60000000)));
   return speedRPM;
 }
 

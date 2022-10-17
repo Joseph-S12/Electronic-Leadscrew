@@ -35,7 +35,8 @@ void main() {
     // doPulse();
     sleep_ms(500);
     spindleSpeed = calcRPM();
-    updateRPM(spindleSpeed);
+    //updateRPM(spindleSpeed);
+    updateRPM((int) divisionCounter);
     if (spindleSpeed==0){
       //resetCounters();
       state=getLeadscrewMode();
@@ -56,7 +57,8 @@ void main_core1() {
   initStepper();
 
   while (true){
-    doPulse();
+  //  doPulse();
+  //  doSteps(1, 5);
   //   updateRPM(calcRPM());
   //   updatePitch(getPitch());
   //   printDisplay();

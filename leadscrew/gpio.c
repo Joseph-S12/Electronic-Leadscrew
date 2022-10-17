@@ -150,6 +150,7 @@ void gpioCallback0(uint gpio, uint32_t events) { //Events is the state of the in
     default:
       break;
   }
+  // doSteps(1, 5);
 }
 
 // void gpioCallback1(uint gpio, uint32_t events) { //Events is the state of the interrupt mask

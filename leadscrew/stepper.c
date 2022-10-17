@@ -24,7 +24,7 @@ void setDir(){
 void doSteps(uint16_t numSteps, int pulseLen) {
   for (size_t i = 0; i < numSteps; i++) {
     stepPulseWrite(1);
-    sleep_us(10);
+    sleep_us(5);
     stepPulseWrite(0);
     sleep_us(pulseLen);
   }
