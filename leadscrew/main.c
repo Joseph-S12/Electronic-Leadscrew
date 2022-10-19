@@ -57,7 +57,7 @@ void main_core1() {
   initStepper();
 
   while (true){
-  //  doPulse();
+    doPulse();
   //  doSteps(1, 5);
   //   updateRPM(calcRPM());
   //   updatePitch(getPitch());
